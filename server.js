@@ -1,13 +1,14 @@
+// Require dependencies
 const http = require('http');
 const app = require('./app');
 
-
+// Set/Determine the server port
 const normalizePort = val => {
     const port = parseInt(val, 10);
-
     if (isNaN(port)) {
         return val;
     }
+    // port >= 0 ?? return port;
     if (port >= 0) {
         return port;
     }
