@@ -94,8 +94,8 @@ exports.logUser = (req, res, next) => {
                 // If user doesn't exist, handle the error in a safe way
                 if (!user) {
                     res.status(404).json({ error: "User not found"});
-                    res.send("No user account with this e-mail."+
-                        "<a href='#'>Sign-up now!</a>");
+                    // res.send("No user account with this e-mail."+
+                    //     "<a href='#'>Sign-up now!</a>");
                 } else {
                     // If user exists, compare the input password and the password stored in database
                     // You will need a bcrypt method called .compare()
@@ -105,9 +105,17 @@ exports.logUser = (req, res, next) => {
                         if (!matched) {
                             res.status(401).json({ message: "Incorrect password" });
                         } else {
-
-                            res.status(200).json({
-                                message: "Password matched"
+                            res.status(200).json({ 
+                                userId: user.userId, 
+                                token: jwt.sign(
+                                    { 
+                                        userId: user.userId, 
+                                        isAdmin: user.isAdmin 
+                                    },
+                                    'RANDOM_TOKEN_SECRET',
+                                    { expiresIn: '24h' }
+                                ),
+                                isAdmin: user.isAdmin
                             });
                         }
                     })
@@ -222,43 +230,24 @@ exports.getAllUsers  = (req, res, next) => {
 
 
 exports.update = (req, res, next) => {
+    let thisId = "6346dacd810afb6fc57f4f78";
+
+    // Prepare the input data validation
     const validInput = new Validator(req.body, {
-        email: 'required|email',
-        password: 'required'
+        email: 'email|length:100',
+        password: '',
+        lastname: 'string|length:100',
+        firstname: 'string|length:100'
     });
-
+    
+    // Check the input data from the frontend
     validInput.check()
-    .then((matched) => {
-        if (!matched) {
-            res.status(400).send(validInput.errors);
-        } else {
-            if (pwRules.validate(req.body.password)) {
-                bcrypt.hash(req.body.password, 10)
-                .then(hash => {
-                    const newId = new mongoose.Types.ObjectId();
-                    const user = new User({
-                        userId: newId,
-                        email: req.body.email,
-                        password: hash,
-                        isAdmin: false
-                    });
-                    user.save()
-                    .then(() => res.status(201).json({ 
-                        message: 'User account created successfully.'
-                    }))
-                    .catch(() => res.status(500).json({ 
-                        error: `An account with e-mail [${req.body.email}] already exists.`
-                    }));
-                })
-                .catch(() => res.status(500).json({ error: 'Internal server error: '}));
-            } else {
-                throw 'Invalid password';
-            }
-        }
-    })
-    .catch(() => res.status(500).json({ error: 'Input fields not validated'}))
 
-
+    User.findOneAndUpdate(
+        { userId : "A.B. Abracus" },
+        { $set: { "name" : "A.B. Abracus", "assignment" : 5}, $inc : { "points" : 5 } },
+        { sort: { "points" : 1 }, upsert:true, returnNewDocument : true }
+     );
 }
 
 
