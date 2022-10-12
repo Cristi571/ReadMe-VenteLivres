@@ -1,7 +1,9 @@
 // Require dependencies
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
+
+const userRoutes = require('./routes/user');
 
 
 // Get the configuration data and credentials
@@ -29,6 +31,7 @@ mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
 
 // CORS
 app.use((req, res, next) => {
+
     // Set the Origin header
     res.setHeader('Access-Control-Allow-Origin', '*');
     // Set the allowed headers
@@ -37,7 +40,11 @@ app.use((req, res, next) => {
     // Set allowed methods
     res.setHeader('Access-Control-Allow-Methods',
         'GET', 'POST', 'PUT', 'DELETE');
+    next();
 })
+
+
+app.use('/api/users', userRoutes);
 
 // Export the application
 module.exports = app;
