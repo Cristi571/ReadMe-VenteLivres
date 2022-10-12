@@ -12,6 +12,7 @@ const credentials = {
     password: process.env.DB_Pass, 
     project: process.env.DB_Proj, 
     database: process.env.DB_Clust}
+
 // Set the database connexion URI 
 const origin = `mongodb+srv://${credentials.user}:${credentials.password}@${credentials.database}.752zzu4.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -29,7 +30,7 @@ mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
         console.log(err);
     })
 
-// CORS
+// CORPS
 app.use((req, res, next) => {
 
     // Set the Origin header
@@ -43,8 +44,8 @@ app.use((req, res, next) => {
     next();
 })
 
-
-app.use('/api/users', userRoutes);
+// Set the root of the user routes
+app.use('/api', userRoutes);
 
 // Export the application
 module.exports = app;

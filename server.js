@@ -8,16 +8,14 @@ const normalizePort = val => {
     if (isNaN(port)) {
         return val;
     }
-    // port >= 0 ?? return port;
     if (port >= 0) {
         return port;
     }
     return false;
 }
 
-// const port = normalizePort(process.env.PORT || '8081')
+
 const port = normalizePort(process.env.PORT || '3001')
-// console.log('server port: ' + port);
 app.set('port', port);
 
 // handle errors
@@ -25,10 +23,10 @@ const errorHandler = error => {
     if (error.syscall !== 'listen') {
         throw error;
     }
-
     const address = server.address();
     const bind = typeof address === "string" ? 'pipe' + address : 'port' + port;
 
+    // Setting some personalized error codes/messages
     switch (error.code) {
         case 'EACCES':
             console.error(bind + 'require elevate privileges.');
@@ -42,13 +40,17 @@ const errorHandler = error => {
     }
 }
 
+
+// Initialize the server
 const server = http.createServer(app);
+// Sets the error handler
 server.on('error', errorHandler);
+// Sets the listening port for the server
 server.on('listening', () => {
         const address = server.address();
         const bind = typeof address === 'string' ? 'pipe' + address : 'port ' + port;
         console.log('Listening on ' + bind);
     }
 )
-
+// Starts the server on the given port
 server.listen(port);
