@@ -73,11 +73,11 @@ ___
 
 > To run this project/application please follow the steps listed below and \**have fun*\* !
 
->>* 1. Make sure you have at least the **16.14.2 NodeJS** Version\
->>  - You can download NodeJS [here](https://nodejs.org/en/download/)\
->>  - Additional documentation about this [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
->>  - Run the command below in your terminal to check the version of **node** installed on your machine\
->> `npm -v`
+  >* 1. Make sure you have at least the **16.14.2 NodeJS** Version\
+  >  - You can download NodeJS [here](https://nodejs.org/en/download/)\
+  >  - Additional documentation about this [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+  >  - Run the command below in your terminal to check the version of **node** installed on your machine\
+  > `npm -v`
    
 
   * 2. Make sure you have at least the **7.24.2** NPM Version\
