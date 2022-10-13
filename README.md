@@ -4,18 +4,18 @@
 
 
 
-### Objectif : 
+## Objectif : 
 > Concevoir et mettre en place une API
 ***
 
 
-#### Contexte : 
+### Contexte : 
 > La société **ReadMe** souhaite digitaliser son activité de vente de livres, en mettant en ligne la fiche des livres proposés. Elle décide de confier le projet à un tiers et s’adresse à l’agence pour laquelle vous travailler.
 Après discussion avec l’agence, il est décidé que le développement sera fait avec un environnement JavaScript côté front et back, ainsi qu’une base de données NoSQL. Votre responsable vous demande prend en charge le back.
 ___
 
 
-#### Fonctionnalités attendues :
+### Fonctionnalités attendues :
 
 - [ ] Possibilité d’inscription et connexion pour l’utilisateur
 - [ ] Visualiser la liste des fiches de livres
@@ -23,7 +23,7 @@ ___
 ___
 
 
-#### Contraintes :
+### Contraintes :
 
 - Le développement backend se fera avec *NodeJS* et *MongoDB* (version cloud avec *Atlas*)
 - Les fonctionnalités d’ajout, modification et suppression doivent être sécurisées
@@ -38,7 +38,7 @@ ___
 ---
 
 
-#### Bonus :
+### Bonus :
 
 - [ ] Permettre à l’utilisateur de classer les livres par catégories
 - [ ] Étoffer les fiches produit avec des informations supplémentaires 
@@ -46,7 +46,7 @@ ___
 ---
 
 
-#### Rendu :
+### Rendu :
 
 - [ ] Envoyer votre travail sur Teams
 - [ ] Documentation de l’API comme vu en cours (document de formalisation)
@@ -54,7 +54,7 @@ ___
 ---
 
 
-##### Barème : 
+### Barème : 
 
 | ***N°***  | **Fonctionnalités**           | **Points** | **Description** |
 | :-:       | :---------------------------- | :--------- | :-------------- |
@@ -69,36 +69,86 @@ ___
 
 
 
-## Dependencies and Requirements 
+# Dependencies and Requirements 
 
-> To run this project/application please follow the steps listed below and \**have fun*\* !
+> To run this project/application please follow the steps listed below and 
+>  \**have fun*\* !
 
   1. **NodeJS**
      - Make sure you have at least the **16.14.2 NodeJS** Version\
      - You can download NodeJS [here](https://nodejs.org/en/download/)\
      - Additional documentation about this [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-     - Run the command below in your terminal to check the version of **node** installed on your machine\
-    `npm -v`
+     - Check the **node** version : \
+     `node -v`
    
 
   2. **npm**
      - Make sure you have at least the **7.24.2** Version of npm
-     - Run the command below in your terminal to install the last version of **npm**\
+     - Run the command below in your terminal to install **npm** : \
       `npm install -g npm`
-     - Run the command below in your terminal to check the version of **npm** installed on your machine\
-      `npm -v`
+     - Check the **npm** version : \
+      `npm --version`
 
 
-  1. fdh
+  3. **Requirements**
+      - Make sure to install all necessary dependencies \
+      `npm install`
 
-  2. 
-   
 
-> **Mongoose** is a JS library that creates connexions between *MongoDB* and *NodeJS*\
+
+  | <u>**Note**</u> |
+  | :-------------- |
+  | Here below you can find a list of dependencies and requirements the you can try to install manually if the 3rd step is not working for you or you have missing dependencies |
+
+
+> [**bcrypt**](https://www.npmjs.com/package/bcrypt)\
+> A password-hashing function \
+> `npm install --save bcrypt`
+
+
+> [**dotenv**](https://www.npmjs.com/package/dotenv)  \
+> Module that loads environment variables from a .env file into process.env \
+> `npm install --save dotenv`
+
+
+> [**express**](https://www.npmjs.com/package/express)  \
+> A framework that simplifies the API and provides tools for HTTP servers \
+> `npm install --save express`
+
+
+> [**express-session**](https://www.npmjs.com/package/express-session)  \
+> Package that helps creating a session middleware with the given options \
+> `npm install --save express-session`
+
+
+> [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)  \
+> Allows to transfer data safely using tokens \
+> `npm install --save express-session`
+
+
+> [**mongoose**](https://www.npmjs.com/package/mongoose) \
+>  A OOP JS library that creates connexions between *MongoDB* and *NodeJS*  \
 > `npm install --save mongoose`
 
 
-> **Express-session**\
-> `npm install --save express-session`
+> [**mongoose-unique-validator**](https://www.npmjs.com/package/mongoose-unique-validator)  \
+> A plugin which adds pre-save validation for unique fields within a Mongoose schema \
+> `npm install --save mongoose-unique-validator`
+
+
+> [**node-input-validator**](https://www.npmjs.com/package/node-input-validator)  \
+> Library for Node.js that helps to validate user inputs using predefined rules.
+> `npm install --save node-input-validator`
+
+
+> [**password-validator**](https://www.npmjs.com/package/password-validator)  \
+> Library that helps to validate passwords using predefined rules. \
+> `npm install --save password-validator`
 
 ---
+
+
+
+
+
+
