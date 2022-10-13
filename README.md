@@ -73,23 +73,25 @@ ___
 
 > To run this project/application please follow the steps listed below and \**have fun*\* !
 
-  >* 1. Make sure you have at least the **16.14.2 NodeJS** Version\
-  >  - You can download NodeJS [here](https://nodejs.org/en/download/)\
-  >  - Additional documentation about this [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-  >  - Run the command below in your terminal to check the version of **node** installed on your machine\
-  > `npm -v`
+  1. **NodeJS**
+     - Make sure you have at least the **16.14.2 NodeJS** Version\
+     - You can download NodeJS [here](https://nodejs.org/en/download/)\
+     - Additional documentation about this [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+     - Run the command below in your terminal to check the version of **node** installed on your machine\
+    `npm -v`
    
 
-  * 2. Make sure you have at least the **7.24.2** NPM Version\
-      - Run the command below in your terminal to install the last version of **npm**\
+  2. **npm**
+     - Make sure you have at least the **7.24.2** Version of npm
+     - Run the command below in your terminal to install the last version of **npm**\
       `npm install -g npm`
-      - Run the command below in your terminal to check the version of **npm** installed on your machine\
+     - Run the command below in your terminal to check the version of **npm** installed on your machine\
       `npm -v`
 
 
-  3. fdh
+  1. fdh
 
-  4. 
+  2. 
    
 
 > **Mongoose** is a JS library that creates connexions between *MongoDB* and *NodeJS*\
