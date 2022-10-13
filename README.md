@@ -71,10 +71,11 @@ ___
 
 ## Dependencies and Requirements 
 
-> **Mongoose** is a JS library that creates connexions between *MongoDB* and *NodeJS*
+> **Mongoose** is a JS library that creates connexions between *MongoDB* and *NodeJS*\
 > `npm install --save mongoose`
 
 
-> ****
+> **Express-session**\
 > `npm install --save express-session`
+
 ---
