@@ -58,7 +58,6 @@ ___
 
 | ***N°***  | **Fonctionnalités**           | **Points** | **Description** |
 | :-:       | :---------------------------- | :--------- | :-------------- |
-|
 | 1.        | Fonctionnalités utilisateurs  |    5 pts   |  |
 | 2.        | Fonctionnalités livres        |    5 pts   |  |
 | 3.        | Sécurité                      |    4 pts   |  |
