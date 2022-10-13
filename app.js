@@ -11,14 +11,18 @@ const credentials = {
     user: process.env.DB_User, 
     password: process.env.DB_Pass, 
     project: process.env.DB_Proj, 
-    database: process.env.DB_Clust}
+    database: process.env.DB_Clust
+}
+
 
 // Set the database connexion URI 
 const origin = `mongodb+srv://${credentials.user}:${credentials.password}@${credentials.database}.752zzu4.mongodb.net/?retryWrites=true&w=majority`;
 
+
 // Initialize the application with express
 const app = express();
 app.use(express.json());
+
 
 // Connect to MongoDB
 mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
@@ -29,6 +33,7 @@ mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
         console.error('Connexion to MongoDB failed');
         console.log(err);
     })
+
 
 // CORPS
 app.use((req, res, next) => {
