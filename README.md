@@ -145,6 +145,14 @@ ___
 > Library that helps to validate passwords using predefined rules. \
 > `npm install --save password-validator`
 
+
+
+  4. **Run and Fun**
+      - Run the app with one of this commands in your terminal \
+      `nodemon server` *( recommended )*\
+      `node server`\
+      `node start`
+        * **Have fun !**
 ---
 
 
