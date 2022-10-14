@@ -5,8 +5,12 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
 
+// Initialize the application with express
+const app = express();
+app.use(express.json());
 
-// Get the configuration data and credentials
+
+// Prepare the configuration data and credentials
 const credentials = {
     user: process.env.DB_User, 
     password: process.env.DB_Pass, 
@@ -15,24 +19,51 @@ const credentials = {
 }
 
 
+/**
+ * Initial database connexion
+ */
 // Set the database connexion URI 
 const origin = `mongodb+srv://${credentials.user}:${credentials.password}@${credentials.database}.752zzu4.mongodb.net/?retryWrites=true&w=majority`;
-
-
-// Initialize the application with express
-const app = express();
-app.use(express.json());
-
-
 // Connect to MongoDB
+var dbWait = true;
+//var animFrames = ["\\ \\ \\", "| | |", "/ / /", "- - -"];
+var animFrames = ["\\ | /", "\\ | /", "\\ | / - - -"];
 mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
-    // Connexion ok
-    .then(() => console.log('Connected to MongoDB'))
-    // Connexion to DB failed : Show message
-    .catch( err => {
-        console.error('Connexion to MongoDB failed');
-        console.log(err);
-    })
+// Connexion ok
+.then(() => {
+    dbWait = false
+    clearInterval(twirlTimer)
+    animFrames = ["", "", "", ""];
+    console.log('Connected to MongoDB')
+})
+// Connexion to DB failed : Show message
+.catch( err => {
+    dbWait = false
+    clearInterval(twirlTimer)
+    animFrames = ["", "", "", ""];
+    console.error('Connexion to MongoDB failed');
+    console.log(`Error details : ${err}`);
+})
+if (dbWait === true) {
+    console.log('Establishing database connection ..')
+    console.log('Please wait')
+    var twirlTimer = (() => {
+        var x = 0;
+        return setInterval(function() {
+        process.stdout.write("\r" + animFrames[x++]);
+        x &= 3;
+        }, 200);
+    })();
+}
+
+
+const db = mongoose.connection
+db.on('Error', (error) => console.error(error))
+db.once('Open', () => console.log('Connected to Database'))
+
+/** */
+
+
 
 
 // CORPS

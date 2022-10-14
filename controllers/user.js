@@ -106,7 +106,9 @@ exports.logUser = (req, res, next) => {
                             res.status(401).json({ message: "Incorrect password" });
                         } else {
                             res.status(200).json({ 
-                                userId: user.userId, 
+                                // 
+                                userId: user.userId,
+                                // Gives a token to the user
                                 token: jwt.sign(
                                     { 
                                         userId: user.userId, 
@@ -122,7 +124,7 @@ exports.logUser = (req, res, next) => {
                     // Catch bcrypt error
                     .catch((err) => {
                         res.status(500).json({
-                            message: "Server internal error",
+                            message: "Server internal error2",
                             error: err
                         });
                     });
@@ -130,7 +132,10 @@ exports.logUser = (req, res, next) => {
             })
             // Catch mongoose error
             .catch((err) => {
-                res.status(500).json({ error: err});
+                res.status(500).json({ 
+                    message: "Server internal error1",
+                    error: err
+                });
             })
         }
     })
