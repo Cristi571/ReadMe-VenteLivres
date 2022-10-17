@@ -25,36 +25,70 @@ const credentials = {
 // Set the database connexion URI 
 const origin = `mongodb+srv://${credentials.user}:${credentials.password}@${credentials.database}.752zzu4.mongodb.net/?retryWrites=true&w=majority`;
 // Connect to MongoDB
+
 var dbWait = true;
-//var animFrames = ["\\ \\ \\", "| | |", "/ / /", "- - -"];
-var animFrames = ["\\ | /", "\\ | /", "\\ | / - - -"];
-mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
-// Connexion ok
-.then(() => {
-    dbWait = false
-    clearInterval(twirlTimer)
-    animFrames = ["", "", "", ""];
-    console.log('Connected to MongoDB')
-})
-// Connexion to DB failed : Show message
-.catch( err => {
-    dbWait = false
-    clearInterval(twirlTimer)
-    animFrames = ["", "", "", ""];
-    console.error('Connexion to MongoDB failed');
-    console.log(`Error details : ${err}`);
-})
-if (dbWait === true) {
-    console.log('Establishing database connection ..')
-    console.log('Please wait')
-    var twirlTimer = (() => {
+
+
+var dbConnect = (() => {
+    // Prepare the message to show for this animation
+    var animMessage = "Establishing database connection"
+    // Preparing console animation frames
+    var animFrames = [
+        " [.  ]", 
+        " [.. ]", " [...]", " [ ..]", 
+        " [  .]", 
+        " [ ..]", " [...]", " [.. ]"
+    ];
+    
+    // Prepare the animation behavior and start it
+    var consoleLoadingAnimation = (() => {
         var x = 0;
-        return setInterval(function() {
-        process.stdout.write("\r" + animFrames[x++]);
-        x &= 3;
-        }, 200);
-    })();
-}
+        return setInterval(() => {
+            (x === animFrames.length) ? x = 0 : x
+            process.stdout.write("\r" + animMessage + 
+                animFrames[x]
+            )
+            x++
+            //x &= 4;
+        }, 300)
+    })()
+
+    var stopConsoleAnimation = (() => {
+        // Stop the animation
+        clearInterval(consoleLoadingAnimation)
+        // Clear the animation console line
+        process.stdout.clearLine()
+        // Return console cursor to initial position
+        process.stdout.cursorTo(0)
+    })
+
+
+    mongoose.connect(origin, { useNewUrlParser: true, useUnifiedTopology: true})
+    // If DB connexion is successful
+    .then(() => {
+        // Set a 1s min time to the animation
+        setTimeout(()=>{
+            stopConsoleAnimation()
+            // Show a custom message to the user
+            console.log('Connected to MongoDB')  
+        }, 1000)
+    })
+    // If some error occurs while connecting to DB
+    .catch( err => {
+        // Set a 1s min time to the animation
+        setTimeout(()=>{
+            stopConsoleAnimation()
+            // Show a custom error message
+            console.error('Connexion to MongoDB failed');
+            // Show actual system error details for debbuging
+            console.log(`Error details : ${err}`);
+        }, 1000)
+    })
+
+})()
+
+
+
 
 
 const db = mongoose.connection

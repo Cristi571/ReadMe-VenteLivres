@@ -141,17 +141,22 @@ ___
 > `npm install --save node-input-validator`
 
 
+> [**nodemon**](https://www.npmjs.com/package/nodemon)  \
+> A tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. \
+> `npm install --save nodemon`
+
+
 > [**password-validator**](https://www.npmjs.com/package/password-validator)  \
 > Library that helps to validate passwords using predefined rules. \
 > `npm install --save password-validator`
 
 
 
-  4. **Run and Fun**
+  1. **Run and Fun**
       - Run the app with one of this commands in your terminal \
-      `nodemon server` *( recommended )*\
-      `node server`\
-      `node start`
+      `nodemon server` *( recommended for **developing** purpose)*\
+      `node server` *( recommended for **production** purpose)*\
+      `node start` *( recommended for **production** purpose)* 
         * **Have fun !**
 ---
 
