@@ -18,6 +18,7 @@
     "mongoose-unique-validator": "^3.1.0",
     "node-input-validator": "^4.5.0",
     "nodemon": "^2.0.20",
-    "password-validator": "^5.3.0"
+    "password-validator": "^5.3.0",
+    "uuid": "^9.0.0"
   }
 }

@@ -14,13 +14,16 @@ router.post('/users/signup', userCtr.createUser);
 router.get('/users/:id', userCtr.getUser);
 
 // Check data and start an user session
-router.post('/users/login', userCtr.logUser);
+router.post('/users/login', userCtr.loginUser);
+
+// Check data and destroy the user session
+router.post('/users/logout', auth, userCtr.logoutUser);
 
 // Update user data
-router.put('/users/update/:id', auth, userCtr.update);
+router.put('/users/:id/update', auth, userCtr.update);
 
 // Delete an user account and all the data associated to it
-router.delete('/users/delete/:id', userCtr.deleteUser);
+router.delete('/users/:id/delete', userCtr.deleteUser);
 
 
 module.exports = router;

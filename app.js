@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
+const bookRoutes = require('./routes/book');
 
 // Initialize the application with express
 const app = express();
@@ -116,6 +117,8 @@ app.use((req, res, next) => {
 
 // Set the root of the user routes
 app.use('/api', userRoutes);
+// Set the root of the book routes
+app.use('/api', bookRoutes);
 
 // Export the application
 module.exports = app;

@@ -17,7 +17,6 @@ const User = require('../models/user');
  * @param {*} next - 
  */
  exports.createUser = (req, res, next) => {
-
     // Prepare the input data validation
     const validInput = new Validator(req.body, {
         email: 'required|email|length:100',
@@ -32,7 +31,9 @@ const User = require('../models/user');
 
         // If input is not safe, handle the error
         if (!matched) {
-            res.status(400).send(validInput.errors);
+            res.status(400).json({
+                error : validInput.errors
+            });
         } else {
 
             // If the input is safe, check the password strengh
@@ -64,7 +65,9 @@ const User = require('../models/user');
             }
         }
     })
-    .catch(() => res.status(400).send(validInput.errors));
+    .catch(() => res.status(400).json({
+        error : validInput.errors
+    }));
 };
 
 
@@ -74,7 +77,7 @@ const User = require('../models/user');
  * @param {*} res 
  * @param {*} next 
  */
-exports.logUser = (req, res, next) => {    
+exports.loginUser = (req, res, next) => {    
     // Prepare the input data validation
     const validInput = new Validator(req.body, {
         email: 'required|email|length:100',
@@ -86,7 +89,9 @@ exports.logUser = (req, res, next) => {
     .then((matched) => {
         // If input is not safe, handle the error
         if (!matched) {
-            res.status(400).send(validInput.errors);
+            res.status(400).json({
+                error : validInput.errors
+            });
         } else {
             // If the input is safe, use the email to check if a user account exists
             User.findOne({ email : req.body.email })
@@ -94,8 +99,10 @@ exports.logUser = (req, res, next) => {
                 // If user doesn't exist, handle the error in a safe way
                 if (!user) {
                     res.status(404).json({ error: "User not found"});
-                    // res.send("No user account with this e-mail."+
-                    //     "<a href='#'>Sign-up now!</a>");
+                    // res.json({
+                    //     error : "No user account with this e-mail."+
+                    //     "<a href='#'>Sign-up now!</a>"
+                    // });
                 } else {
                     // If user exists, compare the input password and the password stored in database
                     // You will need a bcrypt method called .compare()
@@ -105,26 +112,22 @@ exports.logUser = (req, res, next) => {
                         if (!matched) {
                             res.status(401).json({ message: "Incorrect password" });
                         } else {
-                            res.status(200).json({ 
+                            res.status(200).json({
                                 // 
                                 userId: user.userId,
                                 // Gives a token to the user
-                                token: jwt.sign(
-                                    { 
-                                        userId: user.userId, 
-                                        isAdmin: user.isAdmin 
-                                    },
+                                token: jwt.sign({ userId: user.userId },
                                     'RANDOM_TOKEN_SECRET',
                                     { expiresIn: '24h' }
-                                ),
-                                isAdmin: user.isAdmin
+                                )
                             });
                         }
                     })
                     // Catch bcrypt error
                     .catch((err) => {
                         res.status(500).json({
-                            message: "Server internal error2",
+                            message: "Server internal error",
+                            code : 101,
                             error: err
                         });
                     });
@@ -133,15 +136,42 @@ exports.logUser = (req, res, next) => {
             // Catch mongoose error
             .catch((err) => {
                 res.status(500).json({ 
-                    message: "Server internal error1",
+                    message: "Server internal error",
+                    code : 102,
                     error: err
                 });
             })
         }
     })
     // Catch input validator error
-    .catch(() => res.status(400).send(validInput.errors));
+    .catch(() => res.status(400).json({
+        message: "Server internal error",
+        code : 103,
+        error: validInput.errors
+    }));
 };
+
+
+/*
+*/
+exports.logoutUser = (req, res, next) => {
+    console.log("jwt : %o", jwt)
+    jwt.destroy(token)
+    .then((destr)=>{
+        res.status(200).json({
+            message: "User logged out",
+            destroy : destr
+        })
+    })
+    .catch((err)=>{
+        res.status(500).json({
+            error: err
+        })
+    });
+    
+}
+
+
 
 
 /**
@@ -167,8 +197,9 @@ exports.getAllUsers  = (req, res, next) => {
     })
     .catch((err) => {
         res.status(500).json({
-            error: "Server internal error",
-            message: err.message
+            message: "Server internal error",
+            code : 104,
+            error: err.message,
         })
     })
 }
@@ -181,20 +212,45 @@ exports.getAllUsers  = (req, res, next) => {
  * @param {*} next 
  */
  exports.getUser = (req, res, next) => {
-    let userId = "634673def8b680ab391565cc";
-    let owner = false;
+    // If the request userId is the same as the session userId
+    // then the request is sent by the owner of the account
+    let owner = (req.params.id === res.locals.userId);
+    let admin = false;
+    // Check if the connected user has admin privileges
+    User.findOne({userId: res.locals.userId})
+    .then((user) => {
+        if (!user) {
+            admin = false;
+        } else {
+            admin = user.isAdmin;
+        }
+    })
+    // Catch mongoose error
+    .catch((err) => {
+        console.error("Can't get user by id");
+        admin = false;
+    })
     // Check if the logged user is the owner of the requested account
-    if (owner) {
+    if (owner || admin) {
         // Return the user account data
-        User.findOne({userId: userId})
+        User.findOne({userId: req.params.id})
         .then((user) => {
             if (!user) {
                 res.status(404).json({message: "No user data"});
                 return null;
             } else {
+                // Owner data access
+                let userData = {
+                    email : user.email,
+                    lastname : user.lastname,
+                    firstname : user.firstname,
+                }
+                if (admin) {
+                    userData.isAdmin = user.isAdmin
+                }
                 res.status(200).json({
-                    message: "Successful1",
-                    user: user
+                    message: "user data",
+                    data: userData
                 });
                 return user;
             }
@@ -202,8 +258,9 @@ exports.getAllUsers  = (req, res, next) => {
         // Catch mongoose error
         .catch((err) => {
             res.status(500).json({
-                error: "Server internal error",
-                message: err
+                message: "Server internal error",
+                code : 105,
+                error: err,
             })
         })
     } else {
@@ -224,56 +281,114 @@ exports.getAllUsers  = (req, res, next) => {
         // Catch mongoose error
         .catch((err) => {
             res.status(500).json({
-                error: "Server internal error",
-                message: err
+                message: "Server internal error",
+                code : 106,
+                error: err,
             })
         })
     }
 };
 
 
+exports.update = (req, res) => {
 
-
-exports.update = (req, res, next) => {
-    let thisId = "6346dacd810afb6fc57f4f78";
-
-    //const data = {...req.body}
-
-    // Prepare the input data validation
-    const validInput = new Validator(req.body, {
-        email: 'required|email|length:100',
-        password: 'required',
-        lastname: 'required|string|length:100',
-        firstname: 'required|string|length:100'
+    const validInput = new Validator (req.body, {
+        email: "email|length:200",
+        password: "string",
+        firstname: "string|length:150",
+        lastname: "string|length:150",
+        isAdmin: "boolean"
     });
+
     
-    // Check the input data from the frontend
     validInput.check()
-    .then((matched) => {
-        // If input is not safe, handle the error
-        if (!matched) {
-            res.status(400).send(validInput.errors);
+    .then((matched) =>{
+        if(!matched) {
+            res.status(400).json({
+                message : "Invalid inputs",
+                error:validInput.errors
+            });
         } else {
-            User.findOneAndUpdate(
-                { userId : thisId },
-                { $set: { 
-                    "email" : req.body.email,
-                    "password" : req.body.password,
-                    "lastname" : req.body.lastname,
-                    "firstname" : req.body.firstname,
-                } }
-            )
+            // Vérifie si le mot de passe doit être modifié
+            if (req.body.password !== undefined) {
+                // Check if the new password fits the validation rules
+                if (pwRules.validate(req.body.password)) {
+                    // Hash the password
+                    console.log("password : " + req.body.password)
+                    bcrypt.hash(req.body.password, 10)
+                    .then((hash) => {
+                        setUserData(hash)
+                    })
+                    .catch((e) => {
+                        res.status(500).json({
+                            message : "Server internal error",
+                            error : e
+                        })
+                    })
+                } else {
+                    res.status(400).json({
+                        message : "Invalid password",
+                        error : validInput.errors
+                    });
+                    throw 'Invalid password';
+                }
+            } else {
+                // Check if the connected user is sending the request
+                if (req.params.id === res.locals.userId) {
+                    // Get the user data from db
+                    User.findOne({userId: req.params.id})
+                    .then((user) => {
+                        if (!user) {
+                            res.status(404).json({message: "No user data"});
+                            return null;
+                        } else {
+                            setUserData(user.password)
+                            return user;
+                        }
+                    })
+                    // Catch mongoose findOne error
+                    .catch((err) => {
+                        res.status(500).json({
+                            message : "Server internal error",
+                            code : 109,
+                            error : err,
+                        })
+                    })
+                }
+                
+            }
+            
+            function setUserData(newPass) {
+                // If password validator ok
+                const user = req.body
+                user.password = newPass;
+                User.findOneAndUpdate({userId: req.params.id}, {...req.body})
+                .then((utd) => {
+                    if (!utd) {
+                        res.status(500).json({
+                            message: 'User update failed!',
+                            userId: req.params.id,
+                            e: e,
+                            user: user
+                        })
+                    } else {
+                        res.status(200).json({ 
+                            message:"User updated successfully",
+                            user: user
+                        })
+                    }
+                })
+                .catch((err) => res.status(500).json({
+                    message: 'Internal servor error',
+                    error : err
+                }))
+            }
         }
     })
-    .catch((err) => {
-        res.status(500).json({
-            error: "Server internal error",
-            message: err
-        })
-    })
+    .catch(() => res.status(500).json({error: 'Internal servor error'}));
     
-}
 
+}
 
 
 
@@ -299,16 +414,17 @@ exports.deleteUser = (req, res, next) => {
                 // Catch mongoose error
                 .catch((err) => {
                     res.status(400).json({
-                        error: "Server internal error",
-                        message: "An error occured while deleting account, please try again laiter..",
-                        details: err
+                        message: "Server internal error",
+                        code : 107,
+                        error: err,
                     });
                 })
             
             // Handle the error
             } else {
                 res.status(400).json({
-                    message: "Unauthorized access"
+                    message: "Unauthorized access",
+                    code : 108,
                 });            
             }
         }
@@ -317,8 +433,9 @@ exports.deleteUser = (req, res, next) => {
     // Catch mongoose error
     .catch((err) => {
         res.status(500).json({
-            error: "Server internal error",
-            message: err
+            message: "Server internal error",
+            code : 109,
+            error: err,
         })
     })
 };
