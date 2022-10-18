@@ -237,22 +237,41 @@ exports.getAllUsers  = (req, res, next) => {
 exports.update = (req, res, next) => {
     let thisId = "6346dacd810afb6fc57f4f78";
 
+    //const data = {...req.body}
+
     // Prepare the input data validation
     const validInput = new Validator(req.body, {
-        email: 'email|length:100',
-        password: '',
-        lastname: 'string|length:100',
-        firstname: 'string|length:100'
+        email: 'required|email|length:100',
+        password: 'required',
+        lastname: 'required|string|length:100',
+        firstname: 'required|string|length:100'
     });
     
     // Check the input data from the frontend
     validInput.check()
-
-    User.findOneAndUpdate(
-        { userId : "A.B. Abracus" },
-        { $set: { "name" : "A.B. Abracus", "assignment" : 5}, $inc : { "points" : 5 } },
-        { sort: { "points" : 1 }, upsert:true, returnNewDocument : true }
-     );
+    .then((matched) => {
+        // If input is not safe, handle the error
+        if (!matched) {
+            res.status(400).send(validInput.errors);
+        } else {
+            User.findOneAndUpdate(
+                { userId : thisId },
+                { $set: { 
+                    "email" : req.body.email,
+                    "password" : req.body.password,
+                    "lastname" : req.body.lastname,
+                    "firstname" : req.body.firstname,
+                } }
+            )
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({
+            error: "Server internal error",
+            message: err
+        })
+    })
+    
 }
 
 

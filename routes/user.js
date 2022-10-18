@@ -17,7 +17,7 @@ router.get('/users/:id', userCtr.getUser);
 router.post('/users/login', userCtr.logUser);
 
 // Update user data
-router.put('/users/update', auth, userCtr.update);
+router.put('/users/update/:id', auth, userCtr.update);
 
 // Delete an user account and all the data associated to it
 router.delete('/users/delete/:id', userCtr.deleteUser);

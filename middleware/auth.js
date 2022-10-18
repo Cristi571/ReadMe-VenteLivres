@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
     try {
 
         // header dans la requete ==> authorization : 'Bearer xxxxxxxxx';
+        //const authHeader = req.headers['authorization']
         
         // Extraire le token de l'entête
         const token = req.headers.authorization.split(' ')[1];
@@ -18,6 +19,9 @@ module.exports = (req, res, next) => {
         next();
 
     } catch (error) {
-        res.status(401).json({ error : error | 'Authentification failed !'});
+        res.status(401).json({ 
+            error : error | 'Authentification failed !',
+            message : "Auth Error"
+        });
     }
 };
