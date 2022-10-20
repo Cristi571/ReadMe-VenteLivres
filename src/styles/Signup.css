@@ -1,0 +1,110 @@
+
+
+
+.accountContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    min-height: 800px;
+    height: fit-content;
+    padding: 30px 0px;
+    border: 0px solid blue;
+}
+
+.formContainer {
+    width: 600px;
+    height: fit-content;
+    margin: 30px auto auto auto;
+    text-align: center;
+    border: 0px solid black;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px 1px #000000;
+}
+.formTitle {
+    width: 100%;
+    height: 38px;
+    margin: 0px auto;
+    padding: 4px 0px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: rgb(0, 0, 100);
+    color: #e9e9e9;
+    background-color: #136b6b;
+    border: 0px solid black;
+    border-radius: 8px 8px 0px 0px;
+    text-align: center;
+    cursor: default;
+}
+
+.formBody {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    width: 100%;
+    min-height: 260px;
+    height: 100%;
+    margin: 16px auto;
+    border: 0px solid black;
+    transition: all 2s;
+}
+
+.formBody {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.formBody label {
+    width: fit-content;
+    width: 100%;
+    margin: 10px auto;
+}
+.inputBorder {
+    width: 80%;
+    margin: auto;
+    padding: 3px;
+    border-radius: 20px;
+    background: linear-gradient(to right, rgb(228, 0, 0), rgb(165, 16, 165));;
+}
+.formBody label .inputBorder input {
+    width: 83%;
+    padding: 6px 20px 6px 60px;
+    font-size: 1.1rem;
+    border: 0px solid #000;
+    border-radius: 20px;
+    background-color: #fff;
+    transition: all 3s;
+}
+
+.sbmtForm {
+    min-width: 180px;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 20px;
+    height: fit-content;
+    max-height: 60px;
+    margin: 12px auto 0px auto;
+    padding: 8px 16px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.activeFormOption {
+    color: #000;
+    background-color: #e6ffff;
+    font-size: 1.4rem;
+    font-weight: 600;
+    transition: all 0.5s linear;
+}
+.activeFormBody {
+    display: flex;
+}

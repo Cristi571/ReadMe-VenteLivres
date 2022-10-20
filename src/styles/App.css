@@ -1,0 +1,15 @@
+
+.App {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: auto;
+    width: 100%;
+    min-height: 100vh;
+    height: fit-content;
+    border: 0px solid black;
+}
+
+.App .AppMain {
+    margin: 20px 2px 30px 2px;
+    min-height: 80vh;
+}

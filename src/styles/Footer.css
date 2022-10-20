@@ -1,0 +1,79 @@
+
+.AppFooter {
+    width: 100%;
+    max-width: 100%;
+    height: fit-content;
+    border: 0px solid black;
+}
+
+.AppFooter .footerMenu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 220px;
+    height: fit-content;
+    padding: 0% 10%;
+    background-color: #111111;
+    border-bottom: 1px solid #393939;
+}
+
+.AppFooter .footerMenu .f-learnMore,
+.AppFooter .footerMenu .f-support {
+    margin: 18px;
+    padding: 12px;
+    list-style: none;
+    border: 0px solid rgb(255, 255, 255, 0.1);
+}
+
+.AppFooter .footerMenu .f-learnMore .listTitle,
+.AppFooter .footerMenu .f-support .listTitle {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: #fff;
+    border: 0px solid black;
+}
+
+.AppFooter .footerMenu .f-learnMore li,
+.AppFooter .footerMenu .f-support li {
+    padding: 6px 0px;
+    margin: 4px 0px;
+    border: 0px solid white;
+}
+.AppFooter .footerMenu .f-learnMore li a,
+.AppFooter .footerMenu .f-support li a {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #bababa;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 0px solid white;
+}
+.AppFooter .footerMenu .f-learnMore li:hover a,
+.AppFooter .footerMenu .f-support li:hover a {
+    color: red;
+}
+
+
+.AppFooter .footerLabel {
+    width: 100%;
+    height: fit-content;
+    padding: 14px 0px;
+    background-color: #111111;
+    border: 1px solid black;
+    color: #fff;
+    text-align: center;
+}
+.AppFooter .footerLabel a {
+    text-decoration: underline;
+    color: #B1B1FF;
+}
+.AppFooter .footerLabel a:hover {
+    text-decoration: wavy;
+    color: #0a0a51;
+    background-color: rgb(55, 206, 153);
+}

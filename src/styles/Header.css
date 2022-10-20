@@ -1,0 +1,106 @@
+
+.AppHeader {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+
+    width: calc(100% - 32px);
+    max-width: 100%;
+    min-height: 60px;
+    height: 60px;
+    max-height: 120px;
+    padding: 0px 16px;
+    border: 0px solid #000;
+    -webkit-box-shadow: 0px 0px 10px 0px #000000; 
+    box-shadow: 0px 0px 10px 0px #000000;
+}
+
+.AppHeader .headerLogo { 
+    min-width: 60px;
+    width: fit-content;
+    max-width: 120px;
+    height: 100%;
+    max-height: 100%;
+    border: 0px solid #000;
+}
+.AppHeader .headerLogo .logoImg { 
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    border: 0px solid #000;
+}
+
+
+.AppHeader .menus {
+    height: 100%;
+    max-height: 100%;
+    border: 1px solid #000;
+}
+.AppHeader .menus .adminMenu {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-evenly;
+    align-items: center;
+    
+    min-width: 60%;
+    width: fit-content;width: -moz-fit-content;width: 100%;
+    height: fit-content;height: -moz-fit-content;height: 49%;
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid #000;
+}
+
+
+.AppHeader .headerMenu {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-evenly;
+    align-items: center;
+
+    min-width: 60%;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    height: 49%;
+    /* height: 100%; */
+
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.AppHeader .listItem {
+    height: 100%;
+    margin: 0px 8px;
+    list-style: none;
+    border: 0px solid #000;
+}
+
+.AppHeader .itemName {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    padding: 0px 12px;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 0px solid #000;
+    background-color: #fff;
+    color: rgb(0, 0, 103);
+}
+.AppHeader .itemName:hover {
+    background-color: rgb(224, 224, 224);
+}
