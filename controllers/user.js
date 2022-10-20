@@ -98,11 +98,7 @@ exports.loginUser = (req, res, next) => {
             .then((user)=>{
                 // If user doesn't exist, handle the error in a safe way
                 if (!user) {
-                    res.status(404).json({ error: "User not found"});
-                    // res.json({
-                    //     error : "No user account with this e-mail."+
-                    //     "<a href='#'>Sign-up now!</a>"
-                    // });
+                    res.status(404).json({ errorMail: "User not found"});
                 } else {
                     // If user exists, compare the input password and the password stored in database
                     // You will need a bcrypt method called .compare()
