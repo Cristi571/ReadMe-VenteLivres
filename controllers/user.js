@@ -149,34 +149,28 @@ exports.loginUser = (req, res, next) => {
 };
 
 
-/*
-*/
+/**
+ * Deconnects the user by destroying the local session
+ * The token will be destroyed on expiration
+ */
 exports.logoutUser = (req, res, next) => {
-    console.log("jwt : %o", jwt)
-
-    req.session.destroy()
-    .then(
+    // Destroying the session
+    req.session.destroy(err => {
+        console.log('Trying to logout..')
+        // Trying to get some error if it occurs
+        if (err) {
+            // If an error occurs, redirect the user to the home page(safe area)
+            return res.redirect('/home')
+        }
+        // Clear the cookie of the session
+        res.clearCookie('sid');
+        // Set the successful status
         res.status(200).json({
             message: "User logged out",
+            
         })
-    )
-    .catch((err)=>{
-        res.status(500).json({
-            error: err
-        })
-    });
-    /*
-    jwt.destroy(token)
-    .then((destr)=>{
-        
+        console.log('Logout successful')
     })
-    .catch((err)=>{
-        res.status(500).json({
-            error: err
-        })
-    });
-    */
-    
 }
 
 
@@ -184,41 +178,34 @@ exports.logoutUser = (req, res, next) => {
 
 /**
  *  Find all user accounts in database
+ *  This ressource is allowed only for admin privileges
+ *  The access is managed already by the isAdmin and isConnect middlewares
  * @param {*} res 
  * @return : Array | List of {user}
  */
 exports.getAllUsers  = (req, res, next) => {
-    if (req.session.isAdmin) {
-        // You will need a mongoose method called .find()
-        User.find()
-        // Return user accounts data in a way that respects their privacy
-        .then((users)=>{
-            if (!users) {
-                res.status(404).json({
-                    message: "No user found"
-                })
-            } else {
-                res.status(200).json({
-                    message: "Successful",
-                    users: users
-                })
-            }
-        })
-        .catch((err) => {
-            res.status(500).json({
-                message: "Server internal error",
-                code : 104,
-                error: err.message,
+    // You will need a mongoose method called .find()
+    User.find()
+    // Return user accounts data in a way that respects their privacy
+    .then((users)=>{
+        if (!users) {
+            res.status(404).json({
+                message: "No user found"
             })
+        } else {
+            res.status(200).json({
+                message: "Successful",
+                users: users
+            })
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({
+            message: "Server internal error",
+            code : 104,
+            error: err.message,
         })
-    } else {
-        res.status(403).json({
-            error : "Forbidden",
-            message: "Access denied, you don't have permission to access this ressource.",
-            code: 403
-        })
-    }
-    
+    })
 }
 
 
@@ -233,7 +220,7 @@ exports.getAllUsers  = (req, res, next) => {
     // If the request userId is the same as the session userId
     // then the request is sent by the owner of the account
     let owner = (req.params.id === req.session.userId);
-    let admin = false;
+    // let admin = false;
     // Check if the connected user has admin privileges
     User.findOne({userId: req.session.userId})
     .then((user) => {
@@ -246,7 +233,10 @@ exports.getAllUsers  = (req, res, next) => {
     // Catch mongoose error
     .catch((err) => {
         console.error("Can't get user by id");
-        admin = false;
+        res.status(500).json({
+            message: "Internal server error",
+            error : err
+        });
     })
     // Check if the logged user is the owner of the requested account
     if (owner || admin) {
