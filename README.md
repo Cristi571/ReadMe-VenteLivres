@@ -22,6 +22,37 @@ ___
 - [ ] Visualiser / ajouter / modifier / supprimer une fiche de livre 
 ___
 
+### Fonctionnalités de l'API :
+  #### Utilisateur
+- Possibilité d’inscription utilisateur
+  - ` ./api/users/signup `
+- Connexion pour l’utilisateur
+  - ` ./api/users/login `
+- Afficher la liste de tous les utilisateurs
+  - ` ./api/users `
+- Visualiser la fiche d'un utilisateur
+  - ` ./api/users/[:id] `
+- Arrêter la session d'un utilisateur
+  - ` ./api/users/logout `
+- Mettre à jour les données d'un utilisateur
+  - ` ./api/users/[:id]/update `
+- Supprimer le compte d'un utilisateur
+  - ` ./api/users/[:id]/delete `
+#### Livres
+- Visualiser la liste des fiches de livres
+  - ` ./api/books `
+- Filtrer les résultats avec des paramètres de catégories
+  - ` ./api/books/?ctg=horror&ctg=educational `
+- Visualiser une fiche de livre
+  - ` ./api/books/[:id] `
+- Ajouter une fiche de livre
+  - ` ./api/books/create `
+- Modifier une fiche de livre
+  - ` ./api/books/[:id]/update `
+- Supprimer une fiche de livre
+  - ` ./api/books/[:id]/delete `
+___
+
 
 ### Contraintes :
 

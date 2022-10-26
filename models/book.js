@@ -30,7 +30,16 @@ const bookSchema = mongoose.Schema({
         type: Number },
     // The initial/actual stock quantity
     stock: { 
-        type: Number }
+        type: Number },
+    // The volume name if exist
+    volume: { 
+        type: String },
+    // 
+    ctg: {
+        type: Array },
+    // Date de publication
+    publication: {
+        type: String },
 });
 
 bookSchema.plugin(uniqueValidator);

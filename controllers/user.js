@@ -81,7 +81,7 @@ exports.loginUser = (req, res, next) => {
     // Prepare the input data validation
     const validInput = new Validator(req.body, {
         email: 'required|email|length:100',
-        password: 'required'
+        password: 'required|string'
     });
 
     // Check the input data from the frontend
@@ -108,8 +108,9 @@ exports.loginUser = (req, res, next) => {
                         if (!matched) {
                             res.status(401).json({ message: "Incorrect password" });
                         } else {
+                            req.session.userId = user.userId;
+                            req.session.isAdmin = user.isAdmin;
                             res.status(200).json({
-                                // 
                                 userId: user.userId,
                                 // Gives a token to the user
                                 token: jwt.sign({ userId: user.userId },
@@ -152,18 +153,29 @@ exports.loginUser = (req, res, next) => {
 */
 exports.logoutUser = (req, res, next) => {
     console.log("jwt : %o", jwt)
-    jwt.destroy(token)
-    .then((destr)=>{
+
+    req.session.destroy()
+    .then(
         res.status(200).json({
             message: "User logged out",
-            destroy : destr
         })
+    )
+    .catch((err)=>{
+        res.status(500).json({
+            error: err
+        })
+    });
+    /*
+    jwt.destroy(token)
+    .then((destr)=>{
+        
     })
     .catch((err)=>{
         res.status(500).json({
             error: err
         })
     });
+    */
     
 }
 
@@ -176,28 +188,37 @@ exports.logoutUser = (req, res, next) => {
  * @return : Array | List of {user}
  */
 exports.getAllUsers  = (req, res, next) => {
-    // You will need a mongoose method called .find()
-    User.find()
-    // Return user accounts data in a way that respects their privacy
-    .then((users)=>{
-        if (!users) {
-            res.status(404).json({
-                message: "No user found"
-            })
-        } else {
-            res.status(200).json({
-                message: "Successful",
-                users: users
-            })
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({
-            message: "Server internal error",
-            code : 104,
-            error: err.message,
+    if (req.session.isAdmin) {
+        // You will need a mongoose method called .find()
+        User.find()
+        // Return user accounts data in a way that respects their privacy
+        .then((users)=>{
+            if (!users) {
+                res.status(404).json({
+                    message: "No user found"
+                })
+            } else {
+                res.status(200).json({
+                    message: "Successful",
+                    users: users
+                })
+            }
         })
-    })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Server internal error",
+                code : 104,
+                error: err.message,
+            })
+        })
+    } else {
+        res.status(403).json({
+            error : "Forbidden",
+            message: "Access denied, you don't have permission to access this ressource.",
+            code: 403
+        })
+    }
+    
 }
 
 
@@ -208,12 +229,13 @@ exports.getAllUsers  = (req, res, next) => {
  * @param {*} next 
  */
  exports.getUser = (req, res, next) => {
+    console.log(req.session)
     // If the request userId is the same as the session userId
     // then the request is sent by the owner of the account
-    let owner = (req.params.id === res.locals.userId);
+    let owner = (req.params.id === req.session.userId);
     let admin = false;
     // Check if the connected user has admin privileges
-    User.findOne({userId: res.locals.userId})
+    User.findOne({userId: req.session.userId})
     .then((user) => {
         if (!user) {
             admin = false;
@@ -254,7 +276,7 @@ exports.getAllUsers  = (req, res, next) => {
         // Catch mongoose error
         .catch((err) => {
             res.status(500).json({
-                message: "Server internal error",
+                message: "Internal server error",
                 code : 105,
                 error: err,
             })
@@ -269,7 +291,7 @@ exports.getAllUsers  = (req, res, next) => {
                 res.status(404).json({message: "No user data"});
             } else {
                 res.status(200).json({
-                    message: "Successful2",
+                    message: "Successful",
                     user: user
                 });
             }
@@ -277,7 +299,7 @@ exports.getAllUsers  = (req, res, next) => {
         // Catch mongoose error
         .catch((err) => {
             res.status(500).json({
-                message: "Server internal error",
+                message: "Internal server error",
                 code : 106,
                 error: err,
             })
@@ -290,7 +312,6 @@ exports.update = (req, res) => {
 
     const validInput = new Validator (req.body, {
         email: "email|length:200",
-        password: "string",
         firstname: "string|length:150",
         lastname: "string|length:150",
         isAdmin: "boolean"
@@ -317,7 +338,7 @@ exports.update = (req, res) => {
                     })
                     .catch((e) => {
                         res.status(500).json({
-                            message : "Server internal error",
+                            message : "Server internal error1",
                             error : e
                         })
                     })
@@ -330,7 +351,7 @@ exports.update = (req, res) => {
                 }
             } else {
                 // Check if the connected user is sending the request
-                if (req.params.id === res.locals.userId) {
+                if (req.params.id === req.session.userId) {
                     // Get the user data from db
                     User.findOne({userId: req.params.id})
                     .then((user) => {
@@ -345,7 +366,7 @@ exports.update = (req, res) => {
                     // Catch mongoose findOne error
                     .catch((err) => {
                         res.status(500).json({
-                            message : "Server internal error",
+                            message : "Server internal error2",
                             code : 109,
                             error : err,
                         })
@@ -375,13 +396,17 @@ exports.update = (req, res) => {
                     }
                 })
                 .catch((err) => res.status(500).json({
-                    message: 'Internal servor error',
+                    message: 'Internal server error2',
                     error : err
                 }))
             }
+            
         }
     })
-    .catch(() => res.status(500).json({error: 'Internal servor error'}));
+    .catch((err) => res.status(500).json({
+        message: 'Input validation failed',
+        error : validInput.errors
+    }));
     
 
 }

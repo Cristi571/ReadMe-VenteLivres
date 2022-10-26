@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
         // Assigner l'id aux variables locales de réponse
         const userId = decodeToken.userId;
         res.locals.userId = userId;
-        console.log("token : %o", token)
+        // console.log("token : %o", token)
         //res.locals.isAdmin = userId;
         next();
 

@@ -1,6 +1,7 @@
 // Require dependencies
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
@@ -9,6 +10,25 @@ const bookRoutes = require('./routes/book');
 // Initialize the application with express
 const app = express();
 app.use(express.json());
+
+const oneDay = 1000 * 60 * 60 * 24;
+const { 
+    NODE_ENV = 'development',
+    SESS_NAME = 'sid', // Session ID
+    SESS_SECRET = 'my-secret', // Session ID
+    SESS_LIFETIME = oneDay, // Session expire
+} = process.env
+
+const IN_PROD = NODE_ENV === 'production';
+
+app.use(session({
+    name : SESS_NAME,
+    secure : IN_PROD, // Use https only in prod env
+    secret: SESS_SECRET,
+    cookie : { maxAge: SESS_LIFETIME },
+    resave : false, // Do not resave sessions if no modifications
+    saveUninitialized: false // Do not save empty sessions
+}))
 
 
 // Prepare the configuration data and credentials
