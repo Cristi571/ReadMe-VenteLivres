@@ -16,7 +16,7 @@ import Users from '../views/Users'
 import CookieSett from '../views/legal/CookieSettings';
 import Cookies from '../views/legal/CookiesPolicy';
 import Privacy from '../views/legal/PrivacyPolicy';
-import Booking from '../views/Booking';
+import Books from '../views/Books';
 import Faq from '../views/legal/FAQ';
 
 
@@ -32,7 +32,7 @@ function Navigation () { return (
             <Route path="/cookies-policy" element={<Cookies />}></Route>
             <Route path="/privacy-policy" element={<Privacy />}></Route>
             <Route path="/faq" element={<Faq />}></Route>
-            <Route path="/booking" element={<Booking />}></Route>
+            <Route path="/books" element={<Books />}></Route>
 
             {/* Admin  */}
             <Route path="/users" element={<Users />}></Route>

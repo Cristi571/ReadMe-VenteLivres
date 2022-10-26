@@ -49,7 +49,7 @@ export default function Signup() {
         result = await result.json()
         if (result.message) {
             if (result.message === 'User account created successfully.') {
-                navigate("/")
+                navigate("/login")
             }
         }
         console.log(result)

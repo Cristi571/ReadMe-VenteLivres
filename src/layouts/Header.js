@@ -19,7 +19,7 @@ return (
                     <Link to="/home" className='itemName'>Home</Link>
                 </li>
                 <li className='listItem'>
-                    <Link to="/booking" className='itemName'>Booking</Link>
+                    <Link to="/books" className='itemName'>Booking</Link>
                 </li>
                 <li className='listItem'>
                     <Link to="/contact-us" className='itemName'>Contact us</Link>
@@ -27,7 +27,7 @@ return (
                 
                 {userConnected === false && <>
                     <li className='listItem'>
-                        <Link to="/signup" className='itemName'>Sign in</Link>
+                        <Link to="/signup" className='itemName'>Sign up</Link>
                     </li>
                     <li className='listItem'>
                         <Link to="/login" className='itemName'>Log in</Link>
