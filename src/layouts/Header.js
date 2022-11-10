@@ -4,8 +4,7 @@ import "../styles/Header.css";
 import logo from "../media/icons/book_logo5.png";
 
 
-export default function AppHeader() { 
-let userConnected = false;
+export default function AppHeader({localSession}) { 
 return (
     <div className="AppHeader">
         <div className='headerLogo'>
@@ -25,7 +24,7 @@ return (
                     <Link to="/contact-us" className='itemName'>Contact us</Link>
                 </li>
                 
-                {userConnected === false && <>
+                {localSession === false && <>
                     <li className='listItem'>
                         <Link to="/signup" className='itemName'>Sign up</Link>
                     </li>
@@ -34,7 +33,7 @@ return (
                     </li>
                     
                 </>}
-                {userConnected === true && 
+                {localSession !== false && 
                 <>
                 <li className='listItem'>
                     <Link to="/settings" className='itemName'>Settings</Link>

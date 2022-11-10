@@ -14,7 +14,7 @@ export default function footer() { return (
             </ul>
             <ul className="f-support">
                 <div className="listTitle">SUPPORT</div>
-                <li><Link to="/contact-us" className='itemName'>Contactez us</Link></li>
+                <li><Link to="/contact-us" className='itemName'>Contact us</Link></li>
                 <li><Link to="/faq" className='itemName'>FAQ</Link></li>
             </ul>
         </div>

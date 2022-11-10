@@ -4,6 +4,7 @@
     grid-template-rows: auto 1fr auto;
     grid-template-columns: auto;
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     height: fit-content;
     border: 0px solid black;
