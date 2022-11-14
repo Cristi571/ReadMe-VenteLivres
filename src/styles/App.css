@@ -14,3 +14,11 @@
     margin: 20px 2px 30px 2px;
     min-height: 80vh;
 }
+
+.App .App_test {
+    margin: 40px auto;
+    max-width: 800px;
+    overflow: hidden;
+    border: 1px solid black;
+    text-align: center;
+}

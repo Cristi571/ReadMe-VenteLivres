@@ -35,7 +35,7 @@ return (
         localSession={localSession}
         ></Header>
 
-        <div>Token : {localSession}</div>
+        <div className='App_test'>Token : {localSession}</div>
 
         {/* Display the Current navigation page */}
         <Navigation 

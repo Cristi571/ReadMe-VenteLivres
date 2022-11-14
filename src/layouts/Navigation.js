@@ -10,7 +10,7 @@ import Login from '../views/Login';
 import ResetPassword from '../views/ResetPassword';
 import Logout from '../views/Logout';
 import ContactUs from '../views/ContactUs'
-
+import Settings from '../views/Settings';
 // Admin only accessible pages
 import Users from '../views/Users'
 
@@ -20,6 +20,7 @@ import Cookies from '../views/legal/CookiesPolicy';
 import Privacy from '../views/legal/PrivacyPolicy';
 import Books from '../views/Books';
 import Faq from '../views/legal/FAQ';
+
 
 function Navigation ({localSession, setLocalSession}) { 
 
@@ -35,8 +36,9 @@ return (
             <Route path="/reset-password" element={<ResetPassword localSession={localSession} setLocalSession={setLocalSession} ></ResetPassword>}></Route>
             <Route path="/logout" element={<Logout localSession={localSession} setLocalSession={setLocalSession} ></Logout>}></Route>
             {/* Admin  */}
-            <Route path="/users" element={<Users />}></Route>
-            <Route path="/users/:id" element={<Users />}></Route>
+            <Route path="/users" element={<Users localSession={localSession}/>}></Route>
+            <Route path="/users/:id" element={<Users localSession={localSession}/>}></Route>
+            <Route path="/settings" element={<Settings localSession={localSession}/>}></Route>
 
             {/* Free access pages/content */}
             <Route path="/contact-us" element={<ContactUs />}></Route>

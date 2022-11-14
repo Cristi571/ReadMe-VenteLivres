@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "../styles/Signup.css";
 
 export default function Signup({localSession}) {
@@ -52,22 +52,37 @@ export default function Signup({localSession}) {
             body:JSON.stringify({ firstname, lastname, email, password }),
             headers: { 'Content-Type' : 'application/json' }
         })
-        // Wait for the server response
-        result = await result.json()
+        result = await result.json() // Wait for the server response
         // Verify the server response
         if (result.message) {
             if (result.message === 'User account created successfully.') {
                 // Redirect user to login page after sucessful registration
+                setInfoMess(result.message);
                 navigate("/login");
             }
+        } else if (result.error) {
+            if (result.error.firstname) {
+                setInfoMess("Firstname is required");
+            } else if (result.error.lastname) {
+                setInfoMess("Lastname is required");
+            } else if (result.error.email) {
+                setInfoMess("E-mail is required");
+            } else if (result.error.password) {
+                setInfoMess("Password is required");
+            } else if (result.error.substring(0, 29) === "User validation failed: email") {
+                setInfoMess("E-mail already taken");
+            }
         }
-        console.log(result)
+        // console.log(result)
     }
     
 return (
 <div className="accountContainer">
     <div className="formContainer">
         <div className="formTitle">Create account</div>
+            {infoMess !== false && <div className='error errMess'>{infoMess}</div>}
+            {infoMess === "E-mail already taken" && 
+            <Link to="/login" className='itemName'>Login</Link>}
             <form id="inscriptForm" className="formBody">
                 <label htmlFor="userFname">
                     <div className="inputBorder">
