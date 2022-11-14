@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const userRoutes = require('./routes/user');
 const bookRoutes = require('./routes/book');
@@ -121,9 +122,8 @@ db.once('Open', () => console.log('Connected to Database'))
 
 
 
-// CORPS
+// CORS
 app.use((req, res, next) => {
-
     // Set the Origin header
     res.setHeader('Access-Control-Allow-Origin', '*');
     // Set the allowed headers
@@ -134,6 +134,7 @@ app.use((req, res, next) => {
         'GET', 'POST', 'PUT', 'DELETE');
     next();
 })
+app.use(cors())
 
 // Set the root of the user routes
 app.use('/api', userRoutes);

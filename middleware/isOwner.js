@@ -2,7 +2,7 @@
 /* Check if the connected user has admin privileges */
 module.exports = (req, res, next) => {
     try {
-        if (req.params.id === req.session.userId) {
+        if (req.params.id === res.locals.userId) {
             next();
         } else {
             res.status(403).json({

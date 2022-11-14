@@ -1,7 +1,7 @@
 
 // Import node dependencies
 const mongoose = require('mongoose');
-const { Validator } = require('node-input-validator');
+const { Validator, assert } = require('node-input-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -98,7 +98,7 @@ exports.loginUser = (req, res, next) => {
             .then((user)=>{
                 // If user doesn't exist, handle the error in a safe way
                 if (!user) {
-                    res.status(404).json({ errorMail: "User not found"});
+                    res.status(404).json({ message : "User not found"});
                 } else {
                     // If user exists, compare the input password and the password stored in database
                     // You will need a bcrypt method called .compare()
@@ -108,12 +108,13 @@ exports.loginUser = (req, res, next) => {
                         if (!matched) {
                             res.status(401).json({ message: "Incorrect password" });
                         } else {
+                            console.log("User logged in")
                             req.session.userId = user.userId;
                             req.session.isAdmin = user.isAdmin;
                             res.status(200).json({
-                                userId: user.userId,
                                 // Gives a token to the user
-                                token: jwt.sign({ userId: user.userId },
+                                token: jwt.sign(
+                                    { userId: user.userId },
                                     'RANDOM_TOKEN_SECRET',
                                     { expiresIn: '24h' }
                                 )
@@ -166,8 +167,8 @@ exports.logoutUser = (req, res, next) => {
         res.clearCookie('sid');
         // Set the successful status
         res.status(200).json({
+            error: null,
             message: "User logged out",
-            
         })
         console.log('Logout successful')
     })
@@ -183,7 +184,7 @@ exports.logoutUser = (req, res, next) => {
  * @param {*} res 
  * @return : Array | List of {user}
  */
-exports.getAllUsers  = (req, res, next) => {
+exports.getAllUsers  = (req, res) => {
     // You will need a mongoose method called .find()
     User.find()
     // Return user accounts data in a way that respects their privacy
@@ -216,51 +217,102 @@ exports.getAllUsers  = (req, res, next) => {
  * @param {*} next 
  */
  exports.getUser = (req, res, next) => {
-    console.log(req.session)
+    // console.log("Start")
+    // console.log(res.locals.userId)
     // If the request userId is the same as the session userId
     // then the request is sent by the owner of the account
-    let owner = (req.params.id === req.session.userId);
-    // let admin = false;
-    // Check if the connected user has admin privileges
-    User.findOne({userId: req.session.userId})
-    .then((user) => {
-        if (!user) {
-            admin = false;
-        } else {
-            admin = user.isAdmin;
-        }
-    })
-    // Catch mongoose error
-    .catch((err) => {
-        console.error("Can't get user by id");
-        res.status(500).json({
-            message: "Internal server error",
-            error : err
-        });
-    })
+    
+    // async function checkUserIsAdmin() {
+    //     User.findOne({userId: decodeToken.userId})
+    //     .then((user) => {
+    //         if (!user) {
+    //             res.status(403).json({
+    //                 error : "Forbidden",
+    //                 message: "Access denied, you don't have permission to access this ressource.",
+    //                 code: 403
+    //             })
+    //             return new Promise(false);
+    //         } else {
+    //             return new Promise(resolve => {resolve(user.isAdmin)})
+    //         }
+    //     }) 
+    //     // Catch mongoose error
+    //     .catch((err) => {
+    //         res.status(500).json({
+    //             message: "Internal server error",
+    //             error : err
+    //         });
+    //         return new Promise(false);
+    //     })
+    // }
+
+    // const isAdmin = await checkUserIsAdmin();
+    // console.log(isAdmin);
+
+    // function checkUserIsAdmin() {
+    //     return new Promise(resolve => {
+    //         User.findOne({userId: decodeToken.userId})
+    //         .then((user) => {
+    //             if (!user) {
+    //                 res.status(403).json({
+    //                     error : "Forbidden",
+    //                     message: "Access denied, you don't have permission to access this ressource.",
+    //                     code: 403
+    //                 })
+    //                 resolve(false);
+    //             } else {
+    //                 resolve(user.isAdmin);
+    //                 getCompleteUserData();
+    //             }
+    //         })
+    //         // Catch mongoose error
+    //         .catch((err) => {
+    //             res.status(500).json({
+    //                 message: "Internal server error",
+    //                 error : err
+    //             });
+    //             resolve(false);
+    //         })
+    //     });
+    // }
+    // var result = 0;
+    // async function asyncCall() {
+    //     result = await checkUserIsAdmin();
+    //     console.log('isAdmin : ' + result);
+    // }
+    // asyncCall();
+
+    // console.log("result: ", result)
+    // console.log("owner : ", isOwner);
+
+
+
+
     // Check if the logged user is the owner of the requested account
-    if (owner || admin) {
+    
+
+    console.log("locals.isAdmin : ", res.locals.isAdmin)
+    console.log("locals.isOwner : ", res.locals.isOwner)
+
+    function getCompleteUserData() {
         // Return the user account data
         User.findOne({userId: req.params.id})
         .then((user) => {
+            // console.log("user : ", user)
             if (!user) {
                 res.status(404).json({message: "No user data"});
-                return null;
             } else {
+                // console.log(user)
                 // Owner data access
                 let userData = {
                     email : user.email,
                     lastname : user.lastname,
                     firstname : user.firstname,
                 }
-                if (admin) {
-                    userData.isAdmin = user.isAdmin
-                }
                 res.status(200).json({
                     message: "user data",
                     data: userData
                 });
-                return user;
             }
         })
         // Catch mongoose error
@@ -271,18 +323,25 @@ exports.getAllUsers  = (req, res, next) => {
                 error: err,
             })
         })
-    } else {
-        // Use the request parameters to find the user account
-
-        // Return the user account data in a way that respect its privacy
+    }
+    
+    function getLimitedUserData() {
+        // Return the user account data
         User.findOne({userId: req.params.id})
         .then((user) => {
+            // console.log("user : ", user)
             if (!user) {
                 res.status(404).json({message: "No user data"});
             } else {
+                // console.log(user)
+                // Owner data access
+                let userData = {
+                    lastname : user.lastname,
+                    firstname : user.firstname,
+                }
                 res.status(200).json({
-                    message: "Successful",
-                    user: user
+                    message: "user data",
+                    data: userData
                 });
             }
         })
@@ -290,11 +349,20 @@ exports.getAllUsers  = (req, res, next) => {
         .catch((err) => {
             res.status(500).json({
                 message: "Internal server error",
-                code : 106,
+                code : 105,
                 error: err,
             })
         })
     }
+
+    if (res.locals.isAdmin === true || res.locals.isOwner === true) {
+        // High data access
+        getCompleteUserData();
+    } else {
+        // Limited data access
+        getLimitedUserData();
+    }
+
 };
 
 
@@ -340,35 +408,46 @@ exports.update = (req, res) => {
                     throw 'Invalid password';
                 }
             } else {
+                console.log("No password changes");
+                console.log("params.id : ", req.params.id);
+                console.log("session.id : ", req.session.id);
                 // Check if the connected user is sending the request
                 if (req.params.id === req.session.userId) {
                     // Get the user data from db
                     User.findOne({userId: req.params.id})
                     .then((user) => {
                         if (!user) {
+                            console.log("No user found")
                             res.status(404).json({message: "No user data"});
                             return null;
                         } else {
+                            console.log("User found : ", user)
                             setUserData(user.password)
                             return user;
                         }
                     })
                     // Catch mongoose findOne error
                     .catch((err) => {
+                        console.log("FindOne error")
                         res.status(500).json({
                             message : "Server internal error2",
                             code : 109,
                             error : err,
                         })
                     })
+                } else {
+                    setUserData(undefined)
                 }
-                
             }
             
             function setUserData(newPass) {
                 // If password validator ok
                 const user = req.body
-                user.password = newPass;
+                if (newPass !== undefined) {
+                    user.password = newPass;
+                }
+                console.log("user : ", user)
+                console.log("req.body : ", req.body)
                 User.findOneAndUpdate({userId: req.params.id}, {...req.body})
                 .then((utd) => {
                     if (!utd) {
@@ -386,7 +465,7 @@ exports.update = (req, res) => {
                     }
                 })
                 .catch((err) => res.status(500).json({
-                    message: 'Internal server error2',
+                    message: 'An error occured',
                     error : err
                 }))
             }
@@ -404,49 +483,21 @@ exports.update = (req, res) => {
 
 
 exports.deleteUser = (req, res, next) => {
-    let canDelete = true;
-    User.findOne({userId: req.params.id})
-    .then((user) => {
-        // If the user account doesn't exists, handle the error
-        if (!user) {
-            res.status(404).json({message: "This account does not exist"});
-        } else {
-            // Check if the user is authorized to delete the account
-            if (user.isAdmin === true || canDelete === true) {
-                // Delete the account
-                // You will need a mongoose method called .deleteOne()
-                User.deleteOne()
-                .then(() => {
-                    res.status(400).json({
-                        message: "Account deleted successfully",
-                    });
-                })
-                
-                // Catch mongoose error
-                .catch((err) => {
-                    res.status(400).json({
-                        message: "Server internal error",
-                        code : 107,
-                        error: err,
-                    });
-                })
-            
-            // Handle the error
-            } else {
-                res.status(400).json({
-                    message: "Unauthorized access",
-                    code : 108,
-                });            
-            }
-        }
+    // Delete the account
+    // You will need a mongoose method called .deleteOne()
+    User.deleteOne()
+    .then(() => {
+        res.status(400).json({
+            message: "Account deleted successfully",
+        });
     })
     
     // Catch mongoose error
     .catch((err) => {
-        res.status(500).json({
+        res.status(400).json({
             message: "Server internal error",
-            code : 109,
+            code : 107,
             error: err,
-        })
+        });
     })
-};
+}
